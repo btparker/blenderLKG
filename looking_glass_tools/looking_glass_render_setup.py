@@ -62,8 +62,8 @@ class lkgRenderSetup(bpy.types.Operator):
 		global fov
 		global hp
 
-		# Create mesh 
-		me = bpy.data.meshes.new('Multiview') 
+		# Create mesh
+		me = bpy.data.meshes.new('Multiview')
 
 		# Create object
 		currentMultiview = bpy.data.objects.new("Multiview", me)
@@ -72,10 +72,10 @@ class lkgRenderSetup(bpy.types.Operator):
 
 		# Get a BMesh representation
 		bm = bmesh.new()   # create an empty BMesh
-		
+
 		bm_verts_front = []
 		bm_verts_back = []
-		bm_verts = []				
+		bm_verts = []
 
 		for v in verts_front:
 			bm_vert = bm.verts.new(v)
@@ -89,22 +89,22 @@ class lkgRenderSetup(bpy.types.Operator):
 		for i, v in enumerate(bm_verts_front):
 			j = (i+1)%len(bm_verts_front)
 			bm.edges.new( (bm_verts_front[i], bm_verts_front[j]) )
-			
+
 		for i, v in enumerate(bm_verts_back):
 			j = (i+1)%len(bm_verts_back)
 			bm.edges.new( (bm_verts_back[i], bm_verts_back[j]) )
 			# hacky, saves one extra loop
 			bm.edges.new( (bm_verts_front[i], bm_verts_back[i]) )
-		
+
 		dist=self.calculate_camera_distance_z(fov)
 		# hardcoded - refactor!
 		# the result includes a margin around the Multiview container object
 		dist_front = dist - 1.5
 		dist_back = dist + 0.0
-		
+
 		scale_factor_front = tan(fov) * dist_front
 		scale_factor_back = tan(fov) * dist_back
-		
+
 		bmesh.ops.scale(bm, vec=(scale_factor_front, scale_factor_front, 1.0), space=currentMultiview.matrix_local, verts=bm_verts_front)
 		bmesh.ops.scale(bm, vec=(scale_factor_back, scale_factor_back, 1.0), space=currentMultiview.matrix_local, verts=bm_verts_back)
 
@@ -117,7 +117,7 @@ class lkgRenderSetup(bpy.types.Operator):
 
 		# Finish up, write the bmesh back to the mesh
 		bm.to_mesh(me)
-		
+
 	def get_vertical_fov_from_camera(self, cam):
 		''' returns the vertical field of view of the camera '''
 		render = bpy.context.scene.render
@@ -138,7 +138,7 @@ class lkgRenderSetup(bpy.types.Operator):
 		wm = bpy.context.window_manager
 		numViews = wm.tilesHorizontal * wm.tilesVertical
 		viewCone = wm.viewCone
-		
+
 		bpy.ops.object.camera_add(
 			enter_editmode=False,
 			align='WORLD',
@@ -246,6 +246,11 @@ class lkgRenderSetup(bpy.types.Operator):
 			render.resolution_y = 455
 			render.pixel_aspect_x = 1.0
 			render.pixel_aspect_y = 1.125
+		elif wm.tilesHorizontal == 8 and wm.tilesVertical == 6:
+			render.resolution_x = 420
+			render.resolution_y = 560
+			render.pixel_aspect_x = 1.0
+			render.pixel_aspect_y = 1.25
 		elif wm.tilesHorizontal == 4 and wm.tilesVertical == 8:
 			render.resolution_x = 512
 			render.resolution_y = 256

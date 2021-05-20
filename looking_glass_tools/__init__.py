@@ -68,8 +68,8 @@ hp = None
 
 # ------------- The Tools Panel ----------------
 class looking_glass_render_viewer(bpy.types.Panel):
-		
-	""" Looking Glass Render Viewer """ 
+
+	""" Looking Glass Render Viewer """
 	bl_idname = "LKG_PT_panel_tools" # unique identifier for buttons and menu items to reference.
 	bl_label = "Looking Glass Tools" # display name in the interface.
 	bl_space_type = "VIEW_3D"
@@ -92,19 +92,19 @@ class looking_glass_render_viewer(bpy.types.Panel):
 		row.label(text = "LKG image to view:")
 		row = layout.row(align = True)
 		row.template_ID(context.scene, "LKG_image", open="image.open")
-		
+
 
 # ------------- The Config Panel ----------------
 class looking_glass_panel(bpy.types.Panel):
-		
-	""" Looking Glass Properties """ 
+
+	""" Looking Glass Properties """
 	bl_idname = "LKG_PT_panel_config" # unique identifier for buttons and menu items to reference.
 	bl_label = "Looking Glass Properties" # display name in the interface.
 	bl_space_type = "VIEW_3D"
 	bl_region_type = "UI"
 	bl_category = "LKG"
 
-	# exposed parameters stored in WindowManager as global props so they 
+	# exposed parameters stored in WindowManager as global props so they
 	# can be changed even when loading the addon (due to config file parsing)
 	bpy.types.WindowManager.center = FloatProperty(
 			name = "Center",
@@ -116,21 +116,21 @@ class looking_glass_panel(bpy.types.Panel):
 
 	bpy.types.WindowManager.viewCone = bpy.props.FloatProperty(
 			name = "View Cone",
-			default = 40.0,
+			default = 58.0,
 			min = 20.0,
 			max = 80.0,
 			description = "View Cone",
 			)
 	bpy.types.WindowManager.screenW = bpy.props.FloatProperty(
 			name = "Screen Width",
-			default = 2560.0,
+			default = 1536.0,
 			min = 1000.0,
 			max = 10000.0,
 			description = "Screen width of looking glass display in pixels.",
 			)
 	bpy.types.WindowManager.screenH = bpy.props.FloatProperty(
 			name = "Screen Height",
-			default = 1600.0,
+			default = 2048.0,
 			min = 1000.0,
 			max = 10000.0,
 			description = "Screen height of looking glass display in pixels.",
@@ -144,14 +144,14 @@ class looking_glass_panel(bpy.types.Panel):
 			)
 	bpy.types.WindowManager.tilesHorizontal = bpy.props.IntProperty(
 			name = "Horizontal Tiles",
-			default = 5,
+			default = 8,
 			min = 0,
 			max = 100,
 			description = "How many views to store horizontally",
 			)
 	bpy.types.WindowManager.tilesVertical = bpy.props.IntProperty(
 			name = "Vertical Tiles",
-			default = 9,
+			default = 6,
 			min = 0,
 			max = 100,
 			description = "How many views to store horizontally",
@@ -173,7 +173,7 @@ class looking_glass_panel(bpy.types.Panel):
 			layout.label(text=text, icon='ERROR')
 		else:
 			text = "Found " + str(wm.numDevicesConnected) + " connected LKG devices."
-			layout.label(text=text, icon='CAMERA_STEREO')	
+			layout.label(text=text, icon='CAMERA_STEREO')
 
 classes = (
 	OffScreenDraw,
@@ -188,9 +188,9 @@ def register():
 	from bpy.utils import register_class
 	for cls in classes:
 		register_class(cls)
-	
+
 	looking_glass_settings.init()
-		
+
 	wm = bpy.context.window_manager
 	print("Registered the live view")
 
